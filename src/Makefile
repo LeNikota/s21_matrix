@@ -29,11 +29,11 @@ static_check:
 	@find $(git rev-parse --show-toplevel) \( -name "*.c" -o -name "*.h" \) | xargs cppcheck --enable=all --suppress=missingIncludeSystem
 
 test: all
-	@gcc $(FLAGS) -o test ./tests/*.c ./tests/**/*.c -L. -l:s21_matrix.a -lcheck -lm -lsubunit -lgcov
+	@gcc $(FLAGS) -o test ./tests/*.c -L. -l:s21_matrix.a -lcheck -lm -lsubunit -lgcov
 	@./test
 
 leak: all
-	@gcc $(FLAGS) -o test ./tests/*.c ./tests/**/*.c -L. -l:s21_matrix.a -lcheck -lm -lsubunit -lgcov
+	@gcc $(FLAGS) -o test ./tests/*.c -L. -l:s21_matrix.a -lcheck -lm -lsubunit -lgcov
 	valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-leak-kinds=all ./test
 
 gcov_report: clean test

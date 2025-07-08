@@ -1,5 +1,7 @@
 #pragma once
 
+#include <stdlib.h>
+
 // NOTE
 // All operations (except matrix comparison) should return the resulting code
 #define OK 0

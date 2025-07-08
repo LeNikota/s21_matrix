@@ -2,6 +2,8 @@
 
 #include <check.h>
 #include <stdlib.h>
+// #include <stdlib.h> // For rand()
+// #include <time.h>   // For time()
 
 #include "../s21_matrix.h"
 
@@ -65,16 +67,5 @@ void check_incorrect_calc_inverse_matrix(int code);
 void check_inversed_matrix_got_expected(matrix_t *got_matrix,
                                         matrix_t *expected_matrix);
 
-// Suite *s21_add_test(void) {
-//   Suite *s = suite_create("s21_addition");
-//   TCase *tc = tcase_create("Core");
-
-//   tcase_add_test(tc, s21_addition_1);
-//   tcase_add_test(tc, s21_addition_2);
-//   tcase_add_test(tc, s21_addition_3);
-//   tcase_add_test(tc, s21_addition_4);
-
-//   suite_add_tcase(s, tc);
-
-//   return s;
-// }
+// Utility
+void s21_fill_matrix(matrix_t *A, int rows, int columns);
