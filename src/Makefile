@@ -8,7 +8,7 @@ else
     TEST_FLAGS =
 endif
 
-all: format s21_decimal.a
+all: format s21_matrix.a
 
 main: $(OBJ)
 	$(CC) $(FLAGS) $(SRC) -o a.out
@@ -20,7 +20,7 @@ s21_matrix.a: $(OBJ)
 	@gcc $(FLAGS) $(TEST_FLAGS) -c $^ -o $@
 
 clean:
-	@rm -rf $(OBJ) *.gcno *.gcda coverage* s21_decimal.a a.out test 
+	@rm -rf $(OBJ) *.gcno *.gcda coverage* s21_matrix.a a.out test 
 
 format:
 	@find $(git rev-parse --show-toplevel) \( -name "*.c" -o -name "*.h" \) | xargs clang-format -i
@@ -29,11 +29,11 @@ static_check:
 	@find $(git rev-parse --show-toplevel) \( -name "*.c" -o -name "*.h" \) | xargs cppcheck --enable=all --suppress=missingIncludeSystem
 
 test: all
-	@gcc $(FLAGS) -o test ./tests/*.c ./tests/**/*.c -L. -l:s21_decimal.a -lcheck -lm -lsubunit -lgcov
+	@gcc $(FLAGS) -o test ./tests/*.c ./tests/**/*.c -L. -l:s21_matrix.a -lcheck -lm -lsubunit -lgcov
 	@./test
 
 leak: all
-	@gcc $(FLAGS) -o test ./tests/*.c ./tests/**/*.c -L. -l:s21_decimal.a -lcheck -lm -lsubunit -lgcov
+	@gcc $(FLAGS) -o test ./tests/*.c ./tests/**/*.c -L. -l:s21_matrix.a -lcheck -lm -lsubunit -lgcov
 	valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-leak-kinds=all ./test
 
 gcov_report: clean test
