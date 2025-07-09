@@ -59,7 +59,7 @@ START_TEST(s21_eq_matrix_4) {
   s21_create_matrix(2, 2, &matrix2);
   s21_fill_matrix(&matrix1, 1, 64);
   s21_fill_matrix(&matrix2, 2, 3);
-  (s21_eq_matrix(&matrix1, &matrix2));
+  check_incorrect_eq(s21_eq_matrix(&matrix1, &matrix2));
   s21_remove_matrix(&matrix1);
   s21_remove_matrix(&matrix2);
 }

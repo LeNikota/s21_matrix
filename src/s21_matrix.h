@@ -1,12 +1,12 @@
 #pragma once
 
+#include <math.h>
 #include <stdlib.h>
 
-// NOTE
 // All operations (except matrix comparison) should return the resulting code
 #define OK 0
 // incorrect matrix
-#define ERROR 1
+#define INCORRECT_MATRIX 1
 // mismatched matrix sizes, calculations can't be performed with the matrix, etc
 #define CALCULATION_ERROR 2
 
