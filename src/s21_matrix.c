@@ -115,12 +115,26 @@ int s21_mult_number(matrix_t *A, double number, matrix_t *result) {
 }
 
 int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
-  int error = 0;
-  (void)A;
-  (void)B;
-  (void)result;
+  if (A == NULL || B == NULL || result == NULL || A->matrix == NULL ||
+      B->matrix == NULL) {
+    return INCORRECT_MATRIX;
+  }
+  if (A->columns != B->rows) {
+    return CALCULATION_ERROR;
+  }
 
-  return error;
+  int status = s21_create_matrix(A->rows, B->columns, result);
+  if (status != OK) return status;
+
+  for (int i = 0; i < A->rows; i++) {
+    for (int j = 0; j < A->columns; j++) {
+      for (int k = 0; k < A->columns; k++) {
+        result->matrix[i][j] += A->matrix[i][k] * B->matrix[k][j];
+      }
+    }
+  }
+
+  return OK;
 }
 
 int s21_transpose(matrix_t *A, matrix_t *result) {
