@@ -244,11 +244,33 @@ int s21_determinant(matrix_t *A, double *result) {
 }
 
 int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
-  int error = 0;
-  (void)A;
-  (void)result;
+  if (A == NULL || result == NULL || A->matrix == NULL || A->rows <= 0 ||
+      A->columns <= 0) {
+    return INCORRECT_MATRIX;
+  }
 
-  return error;
+  if (A->rows != A->columns) {
+    return CALCULATION_ERROR;
+  }
+
+  double det = 0;
+  int det_status = s21_determinant(A, &det);
+  if (det_status != 0) return det_status;
+  if (fabs(det) < 1e-7) return CALCULATION_ERROR;
+
+  int status = s21_create_matrix(A->columns, A->rows, result);
+  if (status != OK) return status;
+
+  matrix_t complements;
+  matrix_t adjugate;
+  s21_calc_complements(A, &complements);
+  s21_transpose(&complements, &adjugate);
+  s21_mult_number(&adjugate, 1.0 / det, result);
+
+  s21_remove_matrix(&complements);
+  s21_remove_matrix(&adjugate);
+
+  return OK;
 }
 
 // Utility
