@@ -163,46 +163,63 @@ int s21_calc_complements(matrix_t *A, matrix_t *result) {
 }
 
 int s21_determinant(matrix_t *A, double *result) {
-  if (A == NULL || result == NULL || A->matrix == NULL) {
-    return INCORRECT_MATRIX;
-  }
-  if (A->rows != A->columns) {
-    return CALCULATION_ERROR;
-  }
+  if (A == NULL || result == NULL || A->matrix == NULL) return INCORRECT_MATRIX;
+  if (A->rows != A->columns) return CALCULATION_ERROR;
 
-  *result = 0;
+  int n = A->rows;
+  double det = 1.0;
 
-  if (A->rows == 1) {
-    *result = A->matrix[0][0];
-    return OK;
-  }
-  if (A->rows == 2) {
-    *result =
-        A->matrix[0][0] * A->matrix[1][1] - A->matrix[0][1] * A->matrix[1][0];
-    return OK;
+  matrix_t temp;
+  if (s21_create_matrix(n, n, &temp)) return CALCULATION_ERROR;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < n; j++) {
+      temp.matrix[i][j] = A->matrix[i][j];
+    }
   }
 
-  double det = 0;
-  matrix_t minor;
-
-  for (int col = 0; col < A->columns; col++) {
-    s21_create_matrix(A->rows - 1, A->columns - 1, &minor);
-
-    for (int i = 1; i < A->rows; i++) {
-      for (int j = 0, mj = 0; j < A->columns; j++) {
-        if (j == col) continue;
-        minor.matrix[i - 1][mj++] = A->matrix[i][j];
+  for (int col = 0; col < n; col++) {
+    // Partial pivoting:
+    // find the row with the largest element in current column
+    int max_row = col;
+    for (int row = col + 1; row < n; row++) {
+      if (fabs(temp.matrix[row][col]) > fabs(temp.matrix[max_row][col])) {
+        max_row = row;
       }
     }
 
-    double minor_det;
-    s21_determinant(&minor, &minor_det);
-    det += (col % 2 ? -1 : 1) * A->matrix[0][col] * minor_det;
+    // If the maximum element is zero, the matrix is singular
+    if (fabs(temp.matrix[max_row][col]) < 1e-12) {
+      *result = 0.0;
+      s21_remove_matrix(&temp);
+      return OK;
+    }
 
-    s21_remove_matrix(&minor);
+    // Swap rows if needed
+    if (max_row != col) {
+      for (int j = 0; j < n; j++) {
+        double tmp = temp.matrix[col][j];
+        temp.matrix[col][j] = temp.matrix[max_row][j];
+        temp.matrix[max_row][j] = tmp;
+      }
+      det *= -1;  // Row swap changes the sign of determinant
+    }
+
+    // Perform elimination for all rows below
+    for (int row = col + 1; row < n; row++) {
+      double factor = temp.matrix[row][col] / temp.matrix[col][col];
+      for (int j = col; j < n; j++) {
+        temp.matrix[row][j] -= factor * temp.matrix[col][j];
+      }
+    }
+  }
+
+  // Calculate determinant as product of diagonal elements
+  for (int i = 0; i < n; i++) {
+    det *= temp.matrix[i][i];
   }
 
   *result = det;
+  s21_remove_matrix(&temp);
   return OK;
 }
 

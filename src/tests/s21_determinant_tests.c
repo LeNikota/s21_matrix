@@ -85,7 +85,9 @@ START_TEST(s21_determinant_6) {
   int check = s21_determinant(&mat_1, &mat_res);
   ck_assert_int_eq(0, check);
   double mat_check = -1;
-  ck_assert_double_eq(mat_check, mat_res);
+
+  // ck_assert_double_eq(mat_check, mat_res);
+  ck_assert_double_eq_tol(mat_check, mat_res, 1e-12);
 
   s21_remove_matrix(&mat_1);
 }

@@ -68,4 +68,4 @@ void check_inversed_matrix_got_expected(matrix_t *got_matrix,
                                         matrix_t *expected_matrix);
 
 // Utility
-void s21_fill_matrix(matrix_t *A, int mode, double value);
+void s21_fill_matrix(matrix_t *matrix, double start, double value);
