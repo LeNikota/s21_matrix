@@ -156,24 +156,29 @@ int s21_transpose(matrix_t *A, matrix_t *result) {
 
 int s21_calc_complements(matrix_t *A, matrix_t *result) {
   if (!A || !A->matrix || !result) return INCORRECT_MATRIX;
-  if (A->rows != A->columns || A->rows < 2) return CALCULATION_ERROR;
+  if (A->rows != A->columns) return CALCULATION_ERROR;
 
-  int row = A->rows;
-  int status = s21_create_matrix(A->columns, A->rows, result);
-  if (status != OK) return status;
+  if (A->rows == 1) {
+    s21_create_matrix(1, 1, result);
+
+    result->matrix[0][0] = 1;
+
+    return OK;
+  }
+
+  s21_create_matrix(A->columns, A->rows, result);
 
   matrix_t minor;
-  status = s21_create_matrix(row - 1, row - 1, &minor);
-  if (status != OK) return status;
+  s21_create_matrix(A->rows - 1, A->columns - 1, &minor);
 
   for (int i = 0; i < A->rows; i++) {
     for (int j = 0; j < A->columns; j++) {
-      double value = 0;
+      double det = 0;
 
-      get_minor(*A, &minor, i, j);
-      s21_determinant(&minor, &value);
+      get_minor(A, &minor, i, j);
+      s21_determinant(&minor, &det);
 
-      result->matrix[i][j] = value;
+      result->matrix[i][j] = det * ((i + j) % 2 ? -1 : 1);
     }
   }
 
@@ -274,12 +279,12 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
 }
 
 // Utility
-void get_minor(matrix_t A, matrix_t *minor, int row, int col) {
-  for (int i = 0, mi = 0; i < row; i++) {
+void get_minor(matrix_t *A, matrix_t *minor, int row, int col) {
+  for (int i = 0, mi = 0; i < A->rows; i++) {
     if (i == row) continue;
-    for (int j = 0, mj = 0; j < col; j++) {
+    for (int j = 0, mj = 0; j < A->columns; j++) {
       if (j == col) continue;
-      minor->matrix[mi][mj] = A.matrix[i][j];
+      minor->matrix[mi][mj] = A->matrix[i][j];
       mj++;
     }
     mi++;
