@@ -20,6 +20,7 @@ Suite *tests_for_s21_transpose();
 Suite *tests_for_s21_calc_complements();
 Suite *tests_for_s21_determinant();
 Suite *tests_for_s21_inverse_matrix();
+Suite *tests_combined();
 
 void check_incorrect_create(int code);
 void check_correct_create(int code);
@@ -69,3 +70,4 @@ void check_inversed_matrix_got_expected(matrix_t *got_matrix,
 
 // Utility
 void s21_fill_matrix(matrix_t *matrix, double start, double value);
+void check_got_expected(int error, matrix_t *got, matrix_t *expected);
