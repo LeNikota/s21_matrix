@@ -245,6 +245,7 @@ int s21_determinant(matrix_t *A, double *result) {
 
   *result = det;
   s21_remove_matrix(&temp);
+
   return OK;
 }
 
@@ -262,9 +263,6 @@ int s21_inverse_matrix(matrix_t *A, matrix_t *result) {
   int det_status = s21_determinant(A, &det);
   if (det_status != 0) return det_status;
   if (fabs(det) < 1e-7) return CALCULATION_ERROR;
-
-  int status = s21_create_matrix(A->columns, A->rows, result);
-  if (status != OK) return status;
 
   matrix_t complements;
   matrix_t adjugate;
