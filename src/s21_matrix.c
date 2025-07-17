@@ -119,7 +119,8 @@ int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
       B->matrix == NULL) {
     return INCORRECT_MATRIX;
   }
-  if (A->columns != B->rows) {
+  if (A->columns != B->rows || A->rows < 1 || A->columns < 1 ||
+      B->columns < 1) {
     return CALCULATION_ERROR;
   }
 
@@ -127,7 +128,7 @@ int s21_mult_matrix(matrix_t *A, matrix_t *B, matrix_t *result) {
   if (status != OK) return status;
 
   for (int i = 0; i < A->rows; i++) {
-    for (int j = 0; j < A->columns; j++) {
+    for (int j = 0; j < B->columns; j++) {
       for (int k = 0; k < A->columns; k++) {
         result->matrix[i][j] += A->matrix[i][k] * B->matrix[k][j];
       }
